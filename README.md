@@ -53,7 +53,7 @@ nvm install 22
 ```bash
 # 克隆到您的 OpenClaw 工作区
 cd ~/.openclaw/workspace
-git clone https://github.com/madrzak/vidclaw.git dashboard
+git clone https://github.com/gosinkx/vidclaw_zhCN.git dashboard
 
 # 运行设置脚本 (安装依赖、构建、设置 systemd)
 cd dashboard

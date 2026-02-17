@@ -35,7 +35,7 @@ function writeActivity(log) {
 }
 function logActivity(actor, action, details = {}) {
   const log = readActivity();
-  log.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), actor, action, details, timestamp: new Date().toISOString() });
+  log.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), actor, action, details, timestamp: new Date().toISOString() });
   writeActivity(log);
 }
 
@@ -193,22 +193,22 @@ app.delete('/api/tasks/:id', (req, res) => {
 app.get('/api/usage', (req, res) => {
   const now = new Date();
   const sessionsDir = '/root/.openclaw/agents/main/sessions';
-  
+
   let tokensToday = 0, tokensWeek = 0, tokensMonth = 0;
   let costToday = 0, costWeek = 0, costMonth = 0;
   const sessionsToday = new Set(), sessionsWeek = new Set(), sessionsMonth = new Set();
-  
-  const todayStart = new Date(now); todayStart.setHours(0,0,0,0);
-  const weekStart = new Date(now); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
+
+  const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
+  const weekStart = new Date(now); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  
+
   try {
     const files = fs.readdirSync(sessionsDir).filter(f => f.endsWith('.jsonl'));
     for (const file of files) {
       const filePath = path.join(sessionsDir, file);
       const stat = fs.statSync(filePath);
       if (stat.mtime < monthStart) continue;
-      
+
       const content = fs.readFileSync(filePath, 'utf-8');
       const lines = content.split('\n').filter(Boolean);
       for (const line of lines) {
@@ -219,15 +219,15 @@ app.get('/api/usage', (req, res) => {
             const tokens = (usage.input || 0) + (usage.output || 0) + (usage.cacheRead || 0);
             const cost = usage.cost.total;
             const ts = new Date(entry.timestamp || stat.mtime);
-            
+
             if (ts >= monthStart) { tokensMonth += tokens; costMonth += cost; sessionsMonth.add(file); }
             if (ts >= weekStart) { tokensWeek += tokens; costWeek += cost; sessionsWeek.add(file); }
             if (ts >= todayStart) { tokensToday += tokens; costToday += cost; sessionsToday.add(file); }
           }
-        } catch {}
+        } catch { }
       }
     }
-  } catch {}
+  } catch { }
 
   const tomorrowReset = new Date(todayStart); tomorrowReset.setDate(tomorrowReset.getDate() + 1);
   const nextWeekReset = new Date(weekStart); nextWeekReset.setDate(nextWeekReset.getDate() + 7);
@@ -254,10 +254,10 @@ app.get('/api/usage', (req, res) => {
               costSession += u.cost.total;
             }
           }
-        } catch {}
+        } catch { }
       }
     }
-  } catch {}
+  } catch { }
 
   // Session window resets ~5h from window start
   const sessionResetTime = new Date(sessionWindowStart.getTime() + 5 * 3600000);
@@ -278,12 +278,12 @@ app.get('/api/usage', (req, res) => {
     model,
     tiers: [
       {
-        label: 'Current session',
+        label: '当前会话',
         percent: sessionPct,
         resetsIn: sessionResetIn,
       },
       {
-        label: 'Current week (all models)',
+        label: '本周累计 (所有模型)',
         percent: weeklyPct,
         resetsIn: formatDuration(nextWeekReset - now),
       },
@@ -381,7 +381,7 @@ function scanSkills() {
           const content = fs.readFileSync(mdPath, 'utf-8');
           fm = parseFrontmatter(content);
           hasMetadata = Object.keys(fm).length > 0;
-        } catch {}
+        } catch { }
         const id = d.name;
         const entry = entries[id];
         skills.push({
@@ -394,7 +394,7 @@ function scanSkills() {
           hasMetadata,
         });
       }
-    } catch {}
+    } catch { }
   }
   return skills;
 }
@@ -492,7 +492,7 @@ app.get('/api/calendar', (req, res) => {
       data[date] = data[date] || { memory: false, tasks: [] };
       data[date].memory = true;
     }
-  } catch {}
+  } catch { }
   const tasks = readTasks();
   for (const t of tasks) {
     if (t.completedAt) {
@@ -506,12 +506,12 @@ app.get('/api/calendar', (req, res) => {
 
 // --- Soul / Workspace File APIs ---
 const SOUL_TEMPLATES = [
-  { name: 'Minimal Assistant', description: 'Bare bones, helpful, no personality', content: '# SOUL.md\nBe helpful. Be concise. No fluff.' },
-  { name: 'Friendly Companion', description: 'Warm, conversational, uses emoji', content: "# SOUL.md - Who You Are\nYou're warm, friendly, and genuinely care about helping. Use emoji naturally (not excessively). Be conversational — talk like a smart friend, not a manual. Have opinions, crack jokes when appropriate, and remember: helpfulness > formality." },
-  { name: 'Technical Expert', description: 'Precise, detailed, code-focused', content: "# SOUL.md - Who You Are\nYou are a senior technical consultant. Be precise, thorough, and opinionated about best practices. Prefer code examples over explanations. Flag anti-patterns when you see them. Don't sugarcoat — if something is wrong, say so directly. Efficiency matters." },
-  { name: 'Creative Partner', description: 'Imaginative, brainstormy, enthusiastic', content: "# SOUL.md - Who You Are\nYou're a creative collaborator — curious, imaginative, and always looking for unexpected angles. Brainstorm freely. Suggest wild ideas alongside safe ones. Get excited about good concepts. Push creative boundaries while staying grounded in what's achievable." },
-  { name: 'Stern Operator', description: 'No-nonsense, military-efficient, dry humor', content: "# SOUL.md - Who You Are\nMission first. Be direct, efficient, and zero-waste in communication. No pleasantries unless earned. Dry humor is acceptable. Report status clearly. Flag risks immediately. You don't ask permission for routine ops — you execute and report. Save the small talk for after the job's done." },
-  { name: 'Sarcastic Sidekick', description: 'Witty, slightly snarky, still helpful', content: "# SOUL.md - Who You Are\nYou're helpful, but you're not going to pretend everything is sunshine and rainbows. Deliver assistance with a side of wit. Be sarcastic when it's funny, never when it's cruel. You still get the job done — you just have commentary while doing it. Think dry British humor meets competent engineer." },
+  { name: '极简助手', description: '基础、高效、无个性', content: '# SOUL.md\n提供帮助。简洁明了。不废话。' },
+  { name: '友好伙伴', description: '热情、谈话式、使用表情符号', content: "# SOUL.md - 你是谁\n你是一个热情、友好并且真心愿意提供帮助的人。自然地使用表情符号（不要过度）。采用谈话式的口吻 —— 像一个聪明的朋友一样交谈，而不是像说明书。有自己的见解，在合适的时候开玩笑。记住：提供帮助优于保持礼节。" },
+  { name: '技术专家', description: '精准、详尽、关注代码', content: "# SOUL.md - 你是谁\n你是一位资深技术顾问。请保持精准、详尽，并对最佳实践有独到见解。优先提供代码示例而非纯文字解释。发现反模式时予以指出。不要粉饰太平 —— 如果某件事是错的，直接指出。效率至上。" },
+  { name: '创意伙伴', description: '富有想象力、头脑风暴、充满热情', content: "# SOUL.md - 你是谁\n你是一个创意合作者 —— 好奇、富有想象力，总是能找到意想不到的角度。自由地进行头脑风暴。在稳健的方案旁提供大胆的想法。对好的概念感到兴奋。在保持可行性的同时，挑战创意的边界。" },
+  { name: '严厉执行者', description: '不讲废话、军事化效率、冷幽默', content: "# SOUL.md - 你是谁\n任务第一。沟通直接、高效、杜绝浪费。除非应得，否则不讲客套。冷幽默是可以接受的。清晰地汇报状态。立即指出风险。对于日常操作，你无需请求许可 —— 直接执行并汇报。完成任务后再闲聊。" },
+  { name: '讽刺搭档', description: '机智、带点嘲讽、但很有帮助', content: "# SOUL.md - 你是谁\n你愿意帮忙，但你不会假装一切都很完美。在提供帮助的同时带点机智的嘲讽。在有趣时可以讽刺，但绝不刻薄。你依然能完成工作 —— 只是在工作的过程中会有所评论。就像干练的工程师遇上了冷幽默。" },
 ];
 
 function readHistoryFile(histPath) {

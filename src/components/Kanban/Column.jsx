@@ -118,7 +118,7 @@ function SkillAutosuggest({ inputRef, title, setTitle, onSubmit, skills }) {
         value={title}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder="Enter a title... (type @ for skills)"
+        placeholder="请输入标题... (输入 @ 引用技能)"
         rows={1}
         style={{ overflow: 'hidden' }}
         className="w-full bg-secondary/80 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/25"
@@ -156,7 +156,7 @@ export default function Column({ column, tasks, onAdd, onQuickAdd, onEdit, onDel
   }, [adding])
 
   useEffect(() => {
-    fetch('/api/skills').then(r => r.json()).then(setSkills).catch(() => {})
+    fetch('/api/skills').then(r => r.json()).then(setSkills).catch(() => { })
   }, [])
 
   const handleSubmit = () => {
@@ -203,7 +203,7 @@ export default function Column({ column, tasks, onAdd, onQuickAdd, onEdit, onDel
             className="flex items-center gap-1.5 w-full text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-lg hover:bg-secondary/50"
           >
             <Plus size={14} />
-            <span>Add a card</span>
+            <span>添加卡片</span>
           </button>
         ) : (
           <div className="space-y-2">
@@ -219,7 +219,7 @@ export default function Column({ column, tasks, onAdd, onQuickAdd, onEdit, onDel
                 onClick={handleSubmit}
                 className="px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
-                Add card
+                添加卡片
               </button>
               <button
                 onClick={() => { setAdding(false); setTitle('') }}

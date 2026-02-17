@@ -3,19 +3,19 @@ import { Save, RotateCcw, Check, Clock, FileText, Sparkles, History, ChevronRigh
 import { cn } from '@/lib/utils'
 
 const FILE_TABS = [
-  { name: 'SOUL.md', label: 'Soul' },
-  { name: 'IDENTITY.md', label: 'Identity' },
-  { name: 'USER.md', label: 'User' },
-  { name: 'AGENTS.md', label: 'Agents' },
+  { name: 'SOUL.md', label: '灵魂 (Soul)' },
+  { name: 'IDENTITY.md', label: '身份 (Identity)' },
+  { name: 'USER.md', label: '用户 (User)' },
+  { name: 'AGENTS.md', label: '代理 (Agents)' },
 ]
 
 function timeAgo(ts) {
   const s = Math.floor((Date.now() - new Date(ts)) / 1000)
-  if (s < 60) return 'just now'
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
-  if (s < 172800) return 'yesterday'
-  return `${Math.floor(s / 86400)}d ago`
+  if (s < 60) return '刚刚'
+  if (s < 3600) return `${Math.floor(s / 60)}分钟前`
+  if (s < 86400) return `${Math.floor(s / 3600)}小时前`
+  if (s < 172800) return '昨天'
+  return `${Math.floor(s / 86400)}天前`
 }
 
 export default function SoulEditor() {
@@ -42,7 +42,7 @@ export default function SoulEditor() {
       setContent(d.content || '')
       setSavedContent(d.content || '')
       setLastModified(d.lastModified)
-    } catch {}
+    } catch { }
   }, [])
 
   const loadHistory = useCallback(async (name) => {
@@ -56,7 +56,7 @@ export default function SoulEditor() {
   useEffect(() => { loadFile(activeFile); loadHistory(activeFile) }, [activeFile, loadFile, loadHistory])
 
   useEffect(() => {
-    if (isSoul) fetch('/api/soul/templates').then(r => r.json()).then(setTemplates).catch(() => {})
+    if (isSoul) fetch('/api/soul/templates').then(r => r.json()).then(setTemplates).catch(() => { })
   }, [isSoul])
 
   const handleSave = async () => {
@@ -69,11 +69,11 @@ export default function SoulEditor() {
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
       loadHistory(activeFile)
-    } catch {} finally { setSaving(false) }
+    } catch { } finally { setSaving(false) }
   }
 
   const handleRevert = async (idx) => {
-    if (!confirm('Revert to this version? Current content will be saved to history.')) return
+    if (!confirm('确定回滚到此版本吗？当前内容将被保存到历史记录中。')) return
     if (activeFile === 'SOUL.md') {
       const r = await fetch('/api/soul/revert', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: idx }) })
       const d = await r.json()
@@ -89,7 +89,7 @@ export default function SoulEditor() {
   }
 
   const applyTemplate = (t) => {
-    if (isDirty && !confirm('You have unsaved changes. Apply template anyway?')) return
+    if (isDirty && !confirm('您有未保存的更改。确定要应用模板吗？')) return
     setContent(t.content)
   }
 
@@ -109,7 +109,7 @@ export default function SoulEditor() {
       {/* File tabs */}
       <div className="flex gap-1 bg-card rounded-lg p-1 w-fit">
         {FILE_TABS.map(f => (
-          <button key={f.name} onClick={() => { if (isDirty && !confirm('Discard unsaved changes?')) return; setActiveFile(f.name); setPreviewContent(null) }}
+          <button key={f.name} onClick={() => { if (isDirty && !confirm('确定丢弃未保存的更改吗？')) return; setActiveFile(f.name); setPreviewContent(null) }}
             className={cn('px-3 py-1.5 rounded-md text-xs font-medium transition-colors relative',
               activeFile === f.name ? 'bg-primary/15 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-accent')}>
             {f.label}
@@ -131,26 +131,26 @@ export default function SoulEditor() {
               spellCheck={false} />
             {previewContent !== null && (
               <div className="absolute top-2 right-2 bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded">
-                Preview — click editor to dismiss
+                预览模式 — 点击编辑器取消预览
               </div>
             )}
           </div>
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span>{content.length} chars</span>
+              <span>{content.length} 字符</span>
               {lastModified && <span className="flex items-center gap-1"><Clock size={12} /> {timeAgo(lastModified)}</span>}
-              {isDirty && <span className="text-yellow-400">● Unsaved changes</span>}
+              {isDirty && <span className="text-yellow-400">● 未保存的更改</span>}
             </div>
             <div className="flex gap-2">
               <button onClick={() => { loadFile(activeFile); setPreviewContent(null) }}
                 className="px-3 py-1.5 text-xs border border-border rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                <RotateCcw size={12} className="inline mr-1" />Reset
+                <RotateCcw size={12} className="inline mr-1" />重置 (Reset)
               </button>
               <button onClick={handleSave} disabled={!isDirty && !saving}
                 className={cn('px-4 py-1.5 text-xs rounded-md font-medium transition-all',
                   saved ? 'bg-green-600 text-white' : 'bg-primary text-primary-foreground hover:bg-primary/90',
                   (!isDirty && !saving) && 'opacity-50 cursor-not-allowed')}>
-                {saved ? <><Check size={12} className="inline mr-1" />Saved</> : saving ? 'Saving...' : <><Save size={12} className="inline mr-1" />Save</>}
+                {saved ? <><Check size={12} className="inline mr-1" />已保存</> : saving ? '正在保存...' : <><Save size={12} className="inline mr-1" />保存 (Save)</>}
               </button>
             </div>
           </div>
@@ -163,13 +163,13 @@ export default function SoulEditor() {
               <button onClick={() => setRightTab('templates')}
                 className={cn('flex-1 px-3 py-2 text-xs font-medium transition-colors',
                   rightTab === 'templates' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground')}>
-                <Sparkles size={12} className="inline mr-1" />Templates
+                <Sparkles size={12} className="inline mr-1" />模板 (Templates)
               </button>
             )}
             <button onClick={() => setRightTab('history')}
               className={cn('flex-1 px-3 py-2 text-xs font-medium transition-colors',
                 rightTab === 'history' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground')}>
-              <History size={12} className="inline mr-1" />History
+              <History size={12} className="inline mr-1" />历史记录 (History)
             </button>
           </div>
 
@@ -186,7 +186,7 @@ export default function SoulEditor() {
                     <p className="text-xs text-muted-foreground mt-1">{t.description}</p>
                     <button onClick={(e) => { e.stopPropagation(); applyTemplate(t) }}
                       className="mt-2 text-xs text-primary hover:text-primary/80 font-medium">
-                      Use Template
+                      使用此模板 (Use Template)
                     </button>
                   </div>
                 ))}
@@ -195,7 +195,7 @@ export default function SoulEditor() {
 
             {rightTab === 'history' && (
               <div className="space-y-1">
-                {history.length === 0 && <p className="text-xs text-muted-foreground p-2">No history yet</p>}
+                {history.length === 0 && <p className="text-xs text-muted-foreground p-2">暂无历史记录</p>}
                 {[...history].reverse().map((h, i) => {
                   const realIdx = history.length - 1 - i
                   return (
@@ -205,7 +205,7 @@ export default function SoulEditor() {
                         <span className="text-xs text-muted-foreground">{timeAgo(h.timestamp)}</span>
                         <button onClick={(e) => { e.stopPropagation(); handleRevert(realIdx) }}
                           className="text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity font-medium">
-                          Revert
+                          回滚 (Revert)
                         </button>
                       </div>
                       <p className="text-xs text-foreground/70 mt-1 truncate font-mono">

@@ -18,10 +18,10 @@ export default function FilePreview({ path }) {
     fetch(`/api/files/content?path=${encodeURIComponent(path)}`)
       .then(r => r.json())
       .then(d => { setContent(d.content); setLoading(false) })
-      .catch(() => { setContent('Failed to load file'); setLoading(false) })
+      .catch(() => { setContent('文件加载失败'); setLoading(false) })
   }, [path])
 
-  if (loading) return <div className="p-4 text-sm text-muted-foreground">Loading...</div>
+  if (loading) return <div className="p-4 text-sm text-muted-foreground">正在加载...</div>
 
   const ext = path.split('.').pop().toLowerCase()
   const isMarkdown = ext === 'md'

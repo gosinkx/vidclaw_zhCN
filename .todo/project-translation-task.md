@@ -1,0 +1,23 @@
+# 待翻译文件清单
+
+- [x] d:\Project\vidclaw_zhCN\README.md
+- [x] d:\Project\vidclaw_zhCN\API.md
+- [x] d:\Project\vidclaw_zhCN\postcss.config.js
+- [x] d:\Project\vidclaw_zhCN\server.js
+- [x] d:\Project\vidclaw_zhCN\src\App.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Calendar\CalendarView.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Content\FileBrowser.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Content\FilePreview.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Kanban\Board.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Kanban\Column.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Kanban\TaskCard.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Layout.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Settings\SettingsPage.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Skills\SkillsManager.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Soul\SoulEditor.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Usage\HeartbeatTimer.jsx
+- [x] d:\Project\vidclaw_zhCN\src\components\Usage\UsageWidget.jsx
+- [x] d:\Project\vidclaw_zhCN\src\lib\utils.js
+- [x] d:\Project\vidclaw_zhCN\src\main.jsx
+- [x] d:\Project\vidclaw_zhCN\tailwind.config.js
+- [x] d:\Project\vidclaw_zhCN\vite.config.js

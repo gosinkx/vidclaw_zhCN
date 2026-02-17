@@ -6,10 +6,10 @@ import TaskCard from './TaskCard'
 import TaskDialog from './TaskDialog'
 
 const COLUMNS = [
-  { id: 'backlog', title: 'Backlog', color: 'bg-zinc-500' },
-  { id: 'todo', title: 'Todo', color: 'bg-blue-500' },
-  { id: 'in-progress', title: 'In Progress', color: 'bg-amber-500' },
-  { id: 'done', title: 'Done', color: 'bg-green-500' },
+  { id: 'backlog', title: '积压', color: 'bg-zinc-500' },
+  { id: 'todo', title: '待办', color: 'bg-blue-500' },
+  { id: 'in-progress', title: '进行中', color: 'bg-amber-500' },
+  { id: 'done', title: '已完成', color: 'bg-green-500' },
 ]
 
 export default function Board() {

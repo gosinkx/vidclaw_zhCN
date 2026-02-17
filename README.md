@@ -1,39 +1,39 @@
 # VidClaw
 
-A secure, self-hosted command center for managing your OpenClaw AI agent.
+一个安全、自托管的 OpenClaw AI 代理控制中心。
 
-![Dark theme dashboard with Kanban board, usage tracking, and more](https://img.shields.io/badge/status-beta-orange)
+![深色主题仪表板，包含看板、使用情况追踪等](https://img.shields.io/badge/status-beta-orange)
 
-## Features
+## 功能特性
 
-- **🗂️ Kanban Task Board** — Backlog → Todo → In Progress → Done. Drag & drop, priorities, skill assignment. Your agent picks up tasks automatically via heartbeat or cron.
-- **📊 Usage Tracking** — Real-time token usage and cost estimates parsed from session transcripts. Progress bars matching Anthropic's rate limit windows.
-- **🔄 Model Switching** — Switch between Claude models directly from the dashboard. Hot-reloads via OpenClaw's config watcher.
-- **📅 Activity Calendar** — Monthly view of agent activity, parsed from memory files and task history.
-- **📁 Content Browser** — Browse workspace files with markdown preview, syntax highlighting, and download.
-- **🧩 Skills Manager** — View all bundled/workspace skills, enable/disable them, create custom skills.
-- **💜 Soul Editor** — Edit SOUL.md, IDENTITY.md, USER.md, AGENTS.md with version history and persona templates.
-- **⚡ Task Execution** — Tasks execute automatically via cron (every 2 min) or heartbeat (every 30 min). Hit "Run Now" for immediate execution.
+- **🗂️ 看板任务系统** — 待办 (Backlog) → 准备 (Todo) → 进行中 (In Progress) → 已完成 (Done)。支持拖拽操作、优先级设定、技能分配。您的代理将通过心跳 (Heartbeat) 或定时任务 (Cron) 自动接收任务。
+- **📊 使用情况追踪** — 从会话记录中解析出的实时代币 (Token) 使用情况和成本估算。进度条与 Anthropic 的速率限制窗口对齐。
+- **🔄 模型切换** — 直接从仪表板切换 Claude 模型。通过 OpenClaw 的配置监听器实现热重载。
+- **📅 活动日历** — 按月查看代理活动，从内存文件和任务历史中解析。
+- **📁 内容浏览器** — 浏览工作区文件，支持 Markdown 预览、语法高亮和下载。
+- **🧩 技能管理器** — 查看所有内置/工作区技能，启用/禁用它们，或创建自定义技能。
+- **💜 灵魂编辑器 (Soul Editor)** — 编辑 SOUL.md, IDENTITY.md, USER.md, AGENTS.md，支持版本历史和角色模板。
+- **⚡ 任务执行** — 任务通过定时任务 (每 2 分钟) 或心跳 (每 30 分钟) 自动执行。点击“立即运行”可立即执行。
 
-## Security
+## 安全性
 
-The dashboard binds to **localhost only** (127.0.0.1:3333). Access it via SSH tunnel:
+仪表板仅绑定到 **本地回环地址** (127.0.0.1:3333)。请通过 SSH 隧道访问：
 
 ```bash
 ssh -L 3333:localhost:3333 root@your-server
 ```
 
-Then open `http://localhost:3333` in your browser. No ports exposed, no auth needed — SSH is the auth layer.
+然后在浏览器中打开 `http://localhost:3333`。无需暴露端口，无需额外认证 —— SSH 即是安全层。
 
-## Quick Install
+## 快速安装
 
-### Prerequisites
+### 前置条件
 
-- [OpenClaw](https://github.com/openclaw/openclaw) installed and running
-- Node.js 18+ (see below)
-- SSH access to your server
+- 已安装并运行 [OpenClaw](https://github.com/openclaw/openclaw)
+- Node.js 18+ (见下文)
+- 服务器的 SSH 访问权限
 
-#### Installing Node.js
+#### 安装 Node.js
 
 ```bash
 # Ubuntu/Debian
@@ -43,52 +43,52 @@ sudo apt install -y nodejs
 # macOS
 brew install node
 
-# Or use nvm (any platform)
+# 或使用 nvm (适用于各平台)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 nvm install 22
 ```
 
-### Setup
+### 设置
 
 ```bash
-# Clone into your OpenClaw workspace
+# 克隆到您的 OpenClaw 工作区
 cd ~/.openclaw/workspace
 git clone https://github.com/madrzak/vidclaw.git dashboard
 
-# Run the setup script (installs deps, builds, sets up systemd)
+# 运行设置脚本 (安装依赖、构建、设置 systemd)
 cd dashboard
 ./setup.sh
 ```
 
-That's it. The setup script handles everything — npm install, frontend build, systemd service creation, and starts the dashboard automatically.
+就这么简单。设置脚本会处理一切 —— npm install、前端构建、systemd 服务创建，并自动启动仪表板。
 
-Access via SSH tunnel:
+通过 SSH 隧道访问：
 ```bash
 ssh -L 3333:localhost:3333 root@your-server
-# Then open http://localhost:3333
+# 然后打开 http://localhost:3333
 ```
 
-The setup script also configures your `HEARTBEAT.md` so your agent automatically picks up tasks from the board.
+设置脚本还会配置您的 `HEARTBEAT.md`，以便您的代理解自动从看板中获取任务。
 
-## Configuration
+## 配置
 
-Models and usage data are pulled automatically from your OpenClaw config (`openclaw.json`).
+模型和使用数据会自动从您的 OpenClaw 配置 (`openclaw.json`) 中提取。
 
 ## API
 
-See [API.md](API.md) for the full endpoint reference.
+完整的端点参考请参阅 [API.md](API.md)。
 
-## Stack
+## 技术栈
 
-- **Frontend:** React + Vite + Tailwind CSS
-- **Backend:** Express.js
-- **Data:** JSON files (no database required)
-- **Auth:** SSH tunnel (zero-config security)
+- **前端:** React + Vite + Tailwind CSS
+- **后端:** Express.js
+- **数据:** JSON 文件 (无需数据库)
+- **认证:** SSH 隧道 (零配置安全性)
 
-## License
+## 许可证
 
 MIT
 
 ---
 
-Built by [RedStudio](https://redstudio.ie) for [OpenClaw](https://github.com/openclaw/openclaw)
+由 [RedStudio](https://redstudio.ie) 为 [OpenClaw](https://github.com/openclaw/openclaw) 构建

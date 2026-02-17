@@ -8,7 +8,7 @@ export default function CalendarView() {
   const [selected, setSelected] = useState(null)
 
   useEffect(() => {
-    fetch('/api/calendar').then(r => r.json()).then(setData).catch(() => {})
+    fetch('/api/calendar').then(r => r.json()).then(setData).catch(() => { })
   }, [])
 
   const year = current.getFullYear()
@@ -34,7 +34,7 @@ export default function CalendarView() {
           <ChevronLeft size={18} />
         </button>
         <h2 className="text-lg font-semibold">
-          {current.toLocaleString('default', { month: 'long', year: 'numeric' })}
+          {current.toLocaleString('zh-CN', { month: 'long', year: 'numeric' })}
         </h2>
         <button onClick={() => setCurrent(new Date(year, month + 1))} className="p-2 hover:bg-accent rounded-md transition-colors">
           <ChevronRight size={18} />
@@ -42,7 +42,7 @@ export default function CalendarView() {
       </div>
 
       <div className="grid grid-cols-7 gap-1">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
+        {['日', '一', '二', '三', '四', '五', '六'].map(d => (
           <div key={d} className="text-center text-xs text-muted-foreground py-2 font-medium">{d}</div>
         ))}
         {days.map((d, i) => {
@@ -78,10 +78,10 @@ export default function CalendarView() {
       {selected && (
         <div className="bg-card border border-border rounded-xl p-4 space-y-2">
           <h3 className="font-medium text-sm">{selected}</h3>
-          {!selectedData && <p className="text-xs text-muted-foreground">No activity recorded</p>}
+          {!selectedData && <p className="text-xs text-muted-foreground">该日暂无活动记录</p>}
           {selectedData?.memory && (
             <div className="flex items-center gap-2 text-xs text-blue-400">
-              <FileText size={12} /> Memory note exists
+              <FileText size={12} /> 存在记忆笔记
             </div>
           )}
           {selectedData?.tasks?.map((t, i) => (
@@ -93,8 +93,8 @@ export default function CalendarView() {
       )}
 
       <div className="flex gap-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-400" /> Memory note</div>
-        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-400" /> Task completed</div>
+        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-400" /> 记忆笔记</div>
+        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-400" /> 已完成任务</div>
       </div>
     </div>
   )

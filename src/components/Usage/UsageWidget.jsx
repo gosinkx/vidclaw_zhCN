@@ -7,7 +7,7 @@ function ProgressBar({ label, percent, resetsIn }) {
     <div className="space-y-1">
       <div className="flex justify-between text-[10px]">
         <span className="text-muted-foreground font-medium">{label}</span>
-        <span className="text-muted-foreground">Resets {resetsIn}</span>
+        <span className="text-muted-foreground">{resetsIn} 后重置</span>
       </div>
       <div className="flex items-center gap-2">
         <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
@@ -34,13 +34,13 @@ export default function UsageWidget() {
     try {
       const res = await fetch('/api/usage')
       setUsage(await res.json())
-    } catch {}
+    } catch { }
     setLoading(false)
   }, [])
 
   useEffect(() => {
     fetchUsage()
-    fetch('/api/models').then(r => r.json()).then(setModels).catch(() => {})
+    fetch('/api/models').then(r => r.json()).then(setModels).catch(() => { })
     const iv = setInterval(fetchUsage, 5 * 60 * 1000)
     return () => clearInterval(iv)
   }, [fetchUsage])
@@ -54,7 +54,7 @@ export default function UsageWidget() {
       })
       setRestartNote(true)
       fetchUsage()
-    } catch {}
+    } catch { }
   }
 
   if (!usage) return null
@@ -90,7 +90,7 @@ export default function UsageWidget() {
         <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-lg shadow-xl p-4 z-50 space-y-4">
           {/* Model selector */}
           <div className="space-y-1">
-            <label className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Model</label>
+            <label className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">模型 (Model)</label>
             <select
               value={'anthropic/' + usage.model}
               onChange={e => switchModel(e.target.value)}
@@ -101,13 +101,13 @@ export default function UsageWidget() {
               ))}
             </select>
             {restartNote && (
-              <p className="text-[10px] text-green-400">✓ Model updated — takes effect on next session</p>
+              <p className="text-[10px] text-green-400">✓ 模型已更新 — 将在下个会话生效</p>
             )}
           </div>
 
           {/* Usage tiers */}
           <div className="space-y-3">
-            <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Usage</div>
+            <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">使用情况</div>
             {usage.tiers?.map(tier => (
               <ProgressBar key={tier.label} {...tier} />
             ))}

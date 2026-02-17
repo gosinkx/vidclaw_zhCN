@@ -7,7 +7,7 @@ import { GripVertical, Pencil, Trash2, Play, AlertCircle, ChevronDown, ChevronUp
 function formatTime(iso) {
   if (!iso) return ''
   const d = new Date(iso)
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' })
+  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('zh-CN', { hour: 'numeric', minute: '2-digit', second: '2-digit' })
 }
 
 export default function TaskCard({ task, onEdit, onDelete, onRun, isDragging: isDraggingProp }) {
@@ -56,7 +56,7 @@ export default function TaskCard({ task, onEdit, onDelete, onRun, isDragging: is
               onClick={(e) => { e.stopPropagation(); e.preventDefault(); onRun(task.id) }}
               onPointerDown={e => e.stopPropagation()}
               className="text-muted-foreground hover:text-green-400 transition-colors"
-              title="Execute immediately"
+              title="立即执行"
             >
               <Play size={12} />
             </button>
@@ -80,18 +80,18 @@ export default function TaskCard({ task, onEdit, onDelete, onRun, isDragging: is
         ))}
         {hasError && (
           <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-400">
-            <AlertCircle size={10} /> Error
+            <AlertCircle size={10} /> 错误
           </span>
         )}
       </div>
 
       {isInProgress && task.startedAt && (
-        <p className="text-[10px] text-muted-foreground mt-1.5">Started {formatTime(task.startedAt)}</p>
+        <p className="text-[10px] text-muted-foreground mt-1.5">开始于 {formatTime(task.startedAt)}</p>
       )}
 
       {isDone && (
         <div className="mt-1.5 space-y-1">
-          {task.completedAt && <p className="text-[10px] text-muted-foreground">Completed {formatTime(task.completedAt)}</p>}
+          {task.completedAt && <p className="text-[10px] text-muted-foreground">完成于 {formatTime(task.completedAt)}</p>}
           {(task.result || task.error) && (
             <div onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
               <button
@@ -99,7 +99,7 @@ export default function TaskCard({ task, onEdit, onDelete, onRun, isDragging: is
                 className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
               >
                 {expanded ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
-                {task.error ? 'Error Details' : 'Result'}
+                {task.error ? '错误详情' : '执行结果'}
               </button>
               {expanded && (
                 <pre className={cn(

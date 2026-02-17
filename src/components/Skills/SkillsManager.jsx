@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils'
 const API = 'http://localhost:3333/api/skills'
 
 const sourceMeta = {
-  bundled: { label: 'Bundled', icon: Package, color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  managed: { label: 'Managed', icon: FolderCog, color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-  workspace: { label: 'Workspace', icon: Briefcase, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
+  bundled: { label: '内置', icon: Package, color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
+  managed: { label: '托管', icon: FolderCog, color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
+  workspace: { label: '工作区', icon: Briefcase, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
 }
 
 function Toggle({ checked, onChange }) {
@@ -61,31 +61,31 @@ function CreateModal({ onClose, onCreated }) {
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-t-xl sm:rounded-lg w-full max-w-lg p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Create Skill</h2>
+          <h2 className="text-lg font-semibold">创建技能</h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
         </div>
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Name (slug)</label>
+            <label className="text-xs text-muted-foreground mb-1 block">名称 (标识符)</label>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="my-skill"
               className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Description</label>
+            <label className="text-xs text-muted-foreground mb-1 block">描述</label>
             <input value={description} onChange={e => setDescription(e.target.value)} placeholder="What this skill does"
               className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Instructions (Markdown)</label>
+            <label className="text-xs text-muted-foreground mb-1 block">指令 (Markdown)</label>
             <textarea value={instructions} onChange={e => setInstructions(e.target.value)} rows={8} placeholder="# My Skill\n\nInstructions..."
               className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-orange-500 resize-y" />
           </div>
         </div>
         <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 text-sm rounded-md border border-border text-muted-foreground hover:bg-accent">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm rounded-md border border-border text-muted-foreground hover:bg-accent">取消</button>
           <button onClick={submit} disabled={!name.trim() || loading}
             className="px-4 py-2 text-sm rounded-md bg-orange-600 hover:bg-orange-500 text-white disabled:opacity-50">
-            {loading ? 'Creating...' : 'Create'}
+            {loading ? '正在创建...' : '创建'}
           </button>
         </div>
       </div>
@@ -101,8 +101,8 @@ function SkillCard({ skill, onToggle, onDelete, onExpand, expanded }) {
     if (expanded && content === null) {
       setLoadingContent(true)
       fetch(`${API}/${encodeURIComponent(skill.id)}/content`)
-        .then(r => r.json()).then(d => setContent(d.content || 'No content'))
-        .catch(() => setContent('Failed to load'))
+        .then(r => r.json()).then(d => setContent(d.content || '无内容'))
+        .catch(() => setContent('加载失败'))
         .finally(() => setLoadingContent(false))
     }
   }, [expanded])
@@ -136,7 +136,7 @@ function SkillCard({ skill, onToggle, onDelete, onExpand, expanded }) {
       {expanded && (
         <div className="border-t border-border px-4 py-3">
           {loadingContent ? (
-            <p className="text-xs text-muted-foreground animate-pulse">Loading...</p>
+            <p className="text-xs text-muted-foreground animate-pulse">正在加载...</p>
           ) : (
             <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono max-h-64 overflow-auto">{content}</pre>
           )}
@@ -154,7 +154,7 @@ export default function SkillsManager() {
   const [expanded, setExpanded] = useState(null)
   const [showCreate, setShowCreate] = useState(false)
 
-  const load = () => fetch(API).then(r => r.json()).then(setSkills).catch(() => {})
+  const load = () => fetch(API).then(r => r.json()).then(setSkills).catch(() => { })
   useEffect(() => { load() }, [])
 
   const toggle = async (id, enabled) => {
@@ -167,7 +167,7 @@ export default function SkillsManager() {
   }
 
   const del = async (id) => {
-    if (!confirm('Delete this skill?')) return
+    if (!confirm('确定删除此技能吗?')) return
     await fetch(`${API}/${encodeURIComponent(id)}`, { method: 'DELETE' })
     load()
   }
@@ -193,10 +193,10 @@ export default function SkillsManager() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Total Skills', value: counts.total },
-          { label: 'Enabled', value: counts.enabled },
-          { label: 'Bundled', value: counts.bundled },
-          { label: 'Workspace', value: counts.workspace },
+          { label: '总技能数', value: counts.total },
+          { label: '已启用', value: counts.enabled },
+          { label: '内置技能', value: counts.bundled },
+          { label: '工作区技能', value: counts.workspace },
         ].map(s => (
           <div key={s.label} className="bg-card/50 border border-border rounded-lg p-3">
             <p className="text-xs text-muted-foreground">{s.label}</p>
@@ -209,7 +209,7 @@ export default function SkillsManager() {
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px]">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search skills..."
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="搜索技能..."
             className="w-full bg-card border border-border rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
         </div>
         <select value={sourceFilter} onChange={e => setSourceFilter(e.target.value)}
@@ -227,14 +227,14 @@ export default function SkillsManager() {
         </select>
         <button onClick={() => setShowCreate(true)}
           className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-md bg-orange-600 hover:bg-orange-500 text-white transition-colors">
-          <Plus size={14} /> Create Skill
+          <Plus size={14} /> 创建技能
         </button>
       </div>
 
       {/* Skills List */}
       <div className="space-y-2">
         {filtered.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">No skills found</div>
+          <div className="text-center py-12 text-muted-foreground text-sm">未找到相关技能</div>
         ) : filtered.map(s => (
           <SkillCard key={s.id} skill={s} onToggle={toggle} onDelete={del}
             expanded={expanded === s.id} onExpand={id => setExpanded(expanded === id ? null : id)} />

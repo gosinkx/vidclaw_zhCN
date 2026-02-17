@@ -3,11 +3,11 @@ import { Settings, Clock, Save, Check, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const HEARTBEAT_OPTIONS = [
-  { value: '5m', label: '5 minutes' },
-  { value: '10m', label: '10 minutes' },
-  { value: '15m', label: '15 minutes' },
-  { value: '30m', label: '30 minutes' },
-  { value: '1h', label: '1 hour' },
+  { value: '5m', label: '5 分钟' },
+  { value: '10m', label: '10 分钟' },
+  { value: '15m', label: '15 分钟' },
+  { value: '30m', label: '30 分钟' },
+  { value: '1h', label: '1 小时' },
 ]
 
 export default function SettingsPage() {
@@ -40,7 +40,7 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ heartbeatEvery: heartbeat }),
       })
-      if (!r.ok) throw new Error('Save failed')
+      if (!r.ok) throw new Error('保存失败')
       setSavedHeartbeat(heartbeat)
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
@@ -54,7 +54,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 text-muted-foreground">
-        <Loader2 className="animate-spin mr-2" size={18} /> Loading settings…
+        <Loader2 className="animate-spin mr-2" size={18} /> 正在加载设置…
       </div>
     )
   }
@@ -63,17 +63,17 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-2 mb-2">
         <Settings size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold">Settings</h2>
+        <h2 className="text-lg font-semibold">系统设置 (Settings)</h2>
       </div>
 
       {/* Heartbeat Section */}
       <div className="rounded-lg border border-border bg-card p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Clock size={16} className="text-orange-400" />
-          <h3 className="font-medium text-sm">Heartbeat Frequency</h3>
+          <h3 className="font-medium text-sm">心跳频率 (Heartbeat Frequency)</h3>
         </div>
         <p className="text-xs text-muted-foreground">
-          How often the agent checks in. Lower values mean faster responses but more API usage.
+          代理检查任务的频率。值越低响应越快，但会消耗更多 API 资源。
         </p>
         <div className="flex flex-wrap gap-2">
           {HEARTBEAT_OPTIONS.map(opt => (
@@ -109,10 +109,10 @@ export default function SettingsPage() {
           )}
         >
           {saving ? <Loader2 className="animate-spin" size={14} /> : saved ? <Check size={14} /> : <Save size={14} />}
-          {saving ? 'Saving…' : saved ? 'Saved & Restarting' : 'Save'}
+          {saving ? '正在保存…' : saved ? '已保存并正在重启' : '保存设置'}
         </button>
         {saved && (
-          <span className="text-xs text-green-400">OpenClaw is restarting with new settings…</span>
+          <span className="text-xs text-green-400">OpenClaw 正在使用新设置重启…</span>
         )}
       </div>
     </div>

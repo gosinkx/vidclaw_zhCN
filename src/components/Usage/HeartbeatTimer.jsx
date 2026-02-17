@@ -35,7 +35,7 @@ export default function HeartbeatTimer() {
             localStorage.setItem('lastHeartbeat', data.lastHeartbeat.toString())
           }
         }
-      } catch {}
+      } catch { }
     }
     async function fetchInterval() {
       try {
@@ -45,7 +45,7 @@ export default function HeartbeatTimer() {
           const val = data.heartbeatInterval || data.heartbeatEvery
           if (val) setIntervalMs(parseInterval(val))
         }
-      } catch {}
+      } catch { }
     }
     checkBeat()
     fetchInterval()
@@ -61,8 +61,8 @@ export default function HeartbeatTimer() {
   const seconds = Math.floor((remaining % 60000) / 1000)
 
   let label
-  if (minutes < 1) label = '<1m'
-  else label = `${minutes}m`
+  if (minutes < 1) label = '立即'
+  else label = `${minutes}分`
 
   const isImminent = minutes < 1
 
@@ -71,7 +71,7 @@ export default function HeartbeatTimer() {
       <HeartPulse size={11} className={isImminent ? 'text-orange-400 animate-pulse' : ''} />
       <span>{label}</span>
       <div className="absolute top-full right-0 mt-1.5 px-2 py-1 bg-popover border border-border rounded text-[10px] text-popover-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-[9999]">
-        Next execution window in {minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`}
+        下一次执行窗口：{minutes > 0 ? `${minutes}分 ${seconds}秒` : `${seconds}秒`}
       </div>
     </div>
   )

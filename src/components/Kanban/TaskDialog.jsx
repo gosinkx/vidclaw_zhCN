@@ -6,19 +6,19 @@ function formatTime(iso) {
   const d = new Date(iso)
   const now = new Date()
   const diff = now - d
-  if (diff < 60000) return 'just now'
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+  if (diff < 60000) return '刚刚'
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`
+  if (diff < 86400000) return `${Math.floor(diff / 3640000)}小时前`
+  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('zh-CN', { hour: 'numeric', minute: '2-digit' })
 }
 
 const ACTION_LABELS = {
-  task_created: 'Created task',
-  task_updated: 'Updated task',
-  task_run: 'Started task',
-  task_pickup: 'Picked up task',
-  task_completed: 'Completed task',
-  task_deleted: 'Deleted task',
+  task_created: '创建任务',
+  task_updated: '更新任务',
+  task_run: '启动任务',
+  task_pickup: '接收任务',
+  task_completed: '完成任务',
+  task_deleted: '删除任务',
 }
 
 function ActivityLog({ taskId }) {
@@ -40,8 +40,8 @@ function ActivityLog({ taskId }) {
     return () => { mounted = false; clearInterval(interval) }
   }, [])
 
-  if (loading) return <div className="text-xs text-muted-foreground p-4">Loading activity...</div>
-  if (!activities.length) return <div className="text-xs text-muted-foreground p-4">No activity yet</div>
+  if (loading) return <div className="text-xs text-muted-foreground p-4">正在加载活动...</div>
+  if (!activities.length) return <div className="text-xs text-muted-foreground p-4">暂无活动</div>
 
   return (
     <div className="space-y-1 p-1">
@@ -53,14 +53,14 @@ function ActivityLog({ taskId }) {
           <div className="flex-1 min-w-0">
             <p className="text-xs">
               <span className={`font-medium ${a.actor === 'bot' ? 'text-purple-400' : 'text-blue-400'}`}>
-                {a.actor === 'bot' ? 'Bot' : 'User'}
+                {a.actor === 'bot' ? '机器人' : '用户'}
               </span>
               {' '}
               <span className="text-muted-foreground">{ACTION_LABELS[a.action] || a.action}</span>
               {a.details?.title && (
                 <span className="text-foreground font-medium"> "{a.details.title}"</span>
               )}
-              {a.details?.hasError && <span className="text-red-400"> (with error)</span>}
+              {a.details?.hasError && <span className="text-red-400"> (带错误)</span>}
             </p>
             <p className="text-[10px] text-muted-foreground">{formatTime(a.timestamp)}</p>
           </div>
@@ -130,7 +130,7 @@ function SkillPicker({ selectedSkills, onChange, allSkills }) {
               addSkill(id)
             }
           }}
-          placeholder={selectedSkills.length ? '' : 'Search skills...'}
+          placeholder={selectedSkills.length ? '' : '搜索技能...'}
         />
       </div>
       {showDropdown && filtered.length > 0 && (
@@ -160,7 +160,7 @@ export default function TaskDialog({ open, onClose, onSave, task }) {
   const [skills, setSkills] = useState([])
 
   useEffect(() => {
-    fetch('/api/skills').then(r => r.json()).then(setSkills).catch(() => {})
+    fetch('/api/skills').then(r => r.json()).then(setSkills).catch(() => { })
   }, [])
 
   useEffect(() => {
@@ -187,7 +187,7 @@ export default function TaskDialog({ open, onClose, onSave, task }) {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
-          <h2 className="text-lg font-semibold">{task ? 'Edit Task' : 'New Task'}</h2>
+          <h2 className="text-lg font-semibold">{task ? '编辑任务' : '新建任务'}</h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
         </div>
 
@@ -195,42 +195,42 @@ export default function TaskDialog({ open, onClose, onSave, task }) {
           {/* Form — left 2/3 */}
           <div className="w-full md:w-2/3 overflow-y-auto p-5 space-y-4">
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">Title</label>
+              <label className="text-xs text-muted-foreground mb-1 block">标题</label>
               <input
                 className="w-full bg-secondary border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                placeholder="Task title..."
+                placeholder="任务标题..."
                 autoFocus
               />
             </div>
 
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">Description</label>
+              <label className="text-xs text-muted-foreground mb-1 block">描述</label>
               <textarea
                 className="w-full bg-secondary border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary resize-none h-28"
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                placeholder="Description..."
+                placeholder="描述内容..."
               />
             </div>
 
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">Status</label>
+              <label className="text-xs text-muted-foreground mb-1 block">状态</label>
               <select
                 className="w-full bg-secondary border border-border rounded-md px-3 py-2 text-sm outline-none"
                 value={form.status}
                 onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
               >
-                <option value="backlog">Backlog</option>
-                <option value="todo">Todo</option>
-                <option value="in-progress">In Progress</option>
-                <option value="done">Done</option>
+                <option value="backlog">积压</option>
+                <option value="todo">待办</option>
+                <option value="in-progress">进行中</option>
+                <option value="done">已完成</option>
               </select>
             </div>
 
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">Skills</label>
+              <label className="text-xs text-muted-foreground mb-1 block">技能</label>
               <SkillPicker
                 selectedSkills={form.skills}
                 onChange={skills => setForm(f => ({ ...f, skills }))}
@@ -250,12 +250,12 @@ export default function TaskDialog({ open, onClose, onSave, task }) {
         </div>
 
         <div className="flex justify-end gap-2 px-5 py-4 border-t border-border shrink-0">
-          <button onClick={onClose} className="px-4 py-2 text-sm rounded-md bg-secondary hover:bg-accent transition-colors">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm rounded-md bg-secondary hover:bg-accent transition-colors">取消</button>
           <button
             onClick={handleSave}
             className="px-4 py-2 text-sm rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity font-medium"
           >
-            {task ? 'Update' : 'Create'}
+            {task ? '更新' : '创建'}
           </button>
         </div>
       </div>

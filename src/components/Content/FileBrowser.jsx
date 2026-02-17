@@ -80,7 +80,7 @@ export default function FileBrowser() {
             </div>
           ))}
           {entries.length === 0 && (
-            <div className="p-4 text-sm text-muted-foreground text-center">Empty directory</div>
+            <div className="p-4 text-sm text-muted-foreground text-center">目录为空</div>
           )}
         </div>
       </div>
